@@ -32,8 +32,8 @@ $(function(){
       "dependence": [],
       "formula": function() { return false; }
     },
-    initialize: {
-      this.dependence = getParamNames(this.get("formula"));
+    initialize: function() {
+      this.set("dependence", getParamNames(this.get("formula")));
     }
   });
 
@@ -69,8 +69,10 @@ $(function(){
       name: "β",
       formula: function(y,k) { return y/k; }
     })
-    
+
   ]);
+
+  console.log(system);
 
 });
 
