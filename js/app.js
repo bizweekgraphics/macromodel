@@ -33,7 +33,7 @@ $(function(){
       "formula": function() { return false; }
     },
     initialize: function() {
-      this.set("dependence", getParamNames(this.get("formula")));
+      //
     }
   });
 
@@ -42,32 +42,44 @@ $(function(){
 
     new Variable({
       name: "r",
+      value: false,
+      dependence: [],
       formula: function() { return 0.05; }
     }),
 
     new Variable({
       name: "g",
+      value: false,
+      dependence: [],
       formula: function() { return _.random(10,15)/1000; }
     }),
 
     new Variable({
       name: "s",
+      value: false,
+      dependence: [],
       formula: function() { return _.random(10,12)/100; }
     }),
 
     new Variable({
       name: "k",
+      value: false,
+      dependence: [],
       formula: function() { return _.random(1000); }
     }),
 
     new Variable({
       name: "y",
-      formula: function(k) { return 4*k; }
+      value: false,
+      dependence: ["k"],
+      formula: function(vars) { return 4*vars.k; }
     }),
 
     new Variable({
       name: "β",
-      formula: function(y,k) { return y/k; }
+      value: false,
+      dependence: ["y","k"],
+      formula: function(vars) { return vars.y/vars.k; }
     })
 
   ]);
@@ -76,13 +88,27 @@ $(function(){
 
 });
 
-// from http://stackoverflow.com/a/9924463/120290
-var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
-var ARGUMENT_NAMES = /([^\s,]+)/g;
-function getParamNames(func) {
-  var fnStr = func.toString().replace(STRIP_COMMENTS, '')
-  var result = fnStr.slice(fnStr.indexOf('(')+1, fnStr.indexOf(')')).match(ARGUMENT_NAMES)
-  if(result === null)
-     result = []
-  return result
-}
+/*
+
+#TODO: OK, this'll work...
+
+1. Every time you want to compute the state of the system, you call some function and pass in the Collection.
+1a. Obliterate old values?
+
+2. Compute the topological sort of the variables in the system.
+
+3. Display controls for the free variables.
+
+4. Proceed through in topological-sort-order,
+4a. caching results in Variable.attributes.value,
+4b. passing in vars according to dependence,
+4c. finding vars with _.find on the collection by name.
+
+5. Display the result.
+
+Questions:
+- What do cycles in toposort imply about determination?
+- Should we store history, a map from the set of values of all free variables in the collection to their results, for future lookup?
+- Do we just treat different models (relaxing/adding constraints) as totally different systems-collections? Probably.
+
+*/
