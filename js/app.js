@@ -97,7 +97,7 @@ $(function(){
 
 2. Compute the topological sort of the variables in the system.
 
-3. Display controls for the free variables.
+3. Display controls for the free variables, which I guess are... ugh, what? The ones that depend on nothing? Really they should have no formula at all.
 
 4. Proceed through in topological-sort-order,
 4a. caching results in Variable.attributes.value,
